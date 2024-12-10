@@ -1,8 +1,8 @@
 -- main module file
-local module = require("plugin_name.module")
+local module = require("aoc.module")
 
 ---@class Config
----@field opt string Your config option
+---@field opt string
 local config = {
   opt = "Hello!",
 }
@@ -14,8 +14,6 @@ local M = {}
 M.config = config
 
 ---@param args Config?
--- you can define your setup function here. Usually configurations can be merged, accepting outside params and
--- you can also put some validation here for those.
 M.setup = function(args)
   M.config = vim.tbl_deep_extend("force", M.config, args or {})
 end
