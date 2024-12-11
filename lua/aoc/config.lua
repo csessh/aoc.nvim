@@ -5,21 +5,17 @@ local M = {}
 
 --- Default configuration
 ---@type table
-M.options = {
-   session_id = {
-      file_path = "/var/tmp/aoc.txt",
-      chmod = 600,
-   },
+local default_opts = {
+   session_filepath = "/var/tmp/aoc.txt",
    puzzle_input = {
       filename = "puzzle.txt",
       save_to_current_dir = true,
       alternative_filepath = nil,
    },
-   popup_clear_after_s = 5,
 }
 
 M.init = function(args)
-   M.options = vim.tbl_deep_extend("force", M.options, args or {})
+   M.options = vim.tbl_deep_extend("force", default_opts, args or {})
 end
 
 M.debug = function()

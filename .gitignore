@@ -1,3 +1,4 @@
 vendor/plenary.nvim
 doc/tags
 .luarc.json
+cache/*
