@@ -1,6 +1,5 @@
 local cache = require "aoc.cache"
 local curl = require "plenary.curl"
-local inspect = require "vim.inspect"
 local cfg = require "aoc.config"
 
 ---@class APIWrapper
@@ -22,12 +21,12 @@ local validate_args = function(day, year)
    local d = tonumber(day)
    local y = tonumber(year)
 
-   if d < 1 or d > 31 then
-      vim.api.nvim_err_writeln("Invalid day: " .. d)
+   if not d or d < 1 or d > 31 then
+      vim.api.nvim_err_writeln("Invalid day: " .. day)
       return false
    end
 
-   if y < 2015 or y > tonumber(os.date "%Y") then
+   if not y and y < 2015 or y > tonumber(os.date "%Y") then
       vim.api.nvim_err_writeln("Invalid year: " .. year)
       return false
    end

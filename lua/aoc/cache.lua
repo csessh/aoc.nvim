@@ -1,5 +1,3 @@
-local inspect = require "vim.inspect"
-
 ---@class PuzzleCache
 local M = {}
 
