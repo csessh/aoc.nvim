@@ -51,7 +51,7 @@ This is how you generate one:
 1. Login to adventofcode.com <https://adventofcode.com>.
 2. Open Inspect panel, navigate to Storage tab.
 3. Select cookies and copy `session` value.
-4. Save to somewhere, e.g. `/var/tmp/aoc.txt`.
+4. Save to somewhere, e.g. `/var/tmp/aoc.txt`. Remeber to set appropriate permission, e.g `chmod 600` or whatever you deem acceptable.
 5. Update plugin config to set `session_filepath` attribute with the filepath above.
 
 
