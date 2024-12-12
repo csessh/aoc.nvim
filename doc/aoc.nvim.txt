@@ -1,69 +1,86 @@
-*aoc.nvim.txt*     For Neovim >= 0.8.0    Last change: 2024 December 05
+*aoc.nvim.txt*        For Neovim >= 0.8.0        Last change: 2024 December 12
 
 ==============================================================================
-Table of Contents                         *my-template-docs-table-of-contents*
+Table of Contents                                 *aoc.nvim-table-of-contents*
 
-1. A Neovim Plugin Template        |my-template-docs-a-neovim-plugin-template|
-  - Using it              |my-template-docs-a-neovim-plugin-template-using-it|
-  - Features and structure|my-template-docs-a-neovim-plugin-template-features-and-structure|
+  - Intro                                                     |aoc.nvim-intro|
+  - Requirements                                       |aoc.nvim-requirements|
+  - Installation                                       |aoc.nvim-installation|
+  - Configuration                                     |aoc.nvim-configuration|
+  - User command                                       |aoc.nvim-user-command|
+  - Contribution                                       |aoc.nvim-contribution|
 
-==============================================================================
-1. A Neovim Plugin Template        *my-template-docs-a-neovim-plugin-template*
+INTRO                                                         *aoc.nvim-intro*
+
+If you’re like me and you don’t want to copy and paste puzzle input every
+single time? There are other CLI tools that accomplish the same task, none I
+could see for Neovim.
+
+I’d like to stay within Neovim for as long as I could possibly get away with
+doing so. Hence, this plugin.
 
 
+REQUIREMENTS                                           *aoc.nvim-requirements*
 
-A template repository for Neovim plugins.
+This plugin requires:
+
+- Go >= 1.22.10
+- Neovim >= 10.1
 
 
-USING IT                  *my-template-docs-a-neovim-plugin-template-using-it*
+INSTALLATION                                           *aoc.nvim-installation*
 
-Via `gh`
+1. Let your favourite package manager do the work:
 
->
-    $ gh repo create my-plugin -p ellisonleao/nvim-plugin-template
+>lua
+    -- lazy.nvim
+    {
+        "csessh/aoc.nvim",
+        opts = {}
+    },
 <
 
-Viagithub web page:
+1. Setup the plugin in your `init.lua`. This step is not needed with lazy.nvim if `opts` is set.
 
-Click on `Use this template`
-
-
-
-
-FEATURES AND STRUCTURE*my-template-docs-a-neovim-plugin-template-features-and-structure*
-
-- 100% Lua
-- Github actions for:
-    - running tests using plenary.nvim <https://github.com/nvim-lua/plenary.nvim> and busted <https://olivinelabs.com/busted/>
-    - check for formatting errors (Stylua)
-    - vimdocs autogeneration from README.md file
-    - luarocks release (LUAROCKS_API_KEY secret configuration required)
-
-
-PLUGIN STRUCTURE ~
-
->
-    .
-    ├── lua
-    │   ├── plugin_name
-    │   │   └── module.lua
-    │   └── plugin_name.lua
-    ├── Makefile
-    ├── plugin
-    │   └── plugin_name.lua
-    ├── README.md
-    ├── tests
-    │   ├── minimal_init.lua
-    │   └── plugin_name
-    │       └── plugin_name_spec.lua
+>lua
+    require("aoc").setup()
 <
 
-==============================================================================
-2. Links                                              *my-template-docs-links*
 
-1. *GitHub Workflow Status*: https://img.shields.io/github/actions/workflow/status/ellisonleao/nvim-plugin-template/lint-test.yml?branch=main&style=for-the-badge
-2. *Lua*: https://img.shields.io/badge/Made%20with%20Lua-blueviolet.svg?style=for-the-badge&logo=lua
-3. **: https://docs.github.com/assets/cb-36544/images/help/repository/use-this-template-button.png
+CONFIGURATION                                         *aoc.nvim-configuration*
+
+  --------------------------------------------------------------------------------
+  Items                    Type       Default Value               Description
+  ------------------------ ---------- --------------------------- ----------------
+  session_token_path       string     /var/tmp/aoc.nvim/session   This is the path
+                                                                  to where you’d
+                                                                  like to have the
+                                                                  session token
+                                                                  stored
+
+  --------------------------------------------------------------------------------
+
+USER COMMAND                                           *aoc.nvim-user-command*
+
+>
+    :AOCSavePuzzleInput
+    :AOCSaveSampleInput
+    :AOCYankSampleInput
+    :AOCSubmit <result> 
+    :AOCSetSessionToken <token>
+<
+
+
+CONTRIBUTION                                           *aoc.nvim-contribution*
+
+All contributions are most welcome! Please open a PR or create an issue
+<https://github.com/csessh/stopinsert.nvim/issues>.
+
+
+CODING STYLE ~
+
+- Follow the coding style of LuaRocks <https://github.com/luarocks/lua-style-guide>.
+- Make sure you format the code with StyLua <https://github.com/JohnnyMorganz/StyLua> before PR.
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 
