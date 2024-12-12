@@ -16,6 +16,11 @@ local default_opts = {
 
 M.init = function(args)
    M.options = vim.tbl_deep_extend("force", default_opts, args or {})
+
+   M.options.session_filepath = vim.fn.expand(M.options.session_filepath)
+   if M.options.puzzle_input.alternative_filepath then
+      M.options.alternative_filepath = vim.fn.expand(M.options.alternative_filepath)
+   end
 end
 
 M.debug = function()
