@@ -15,29 +15,27 @@ I'd like to stay within Neovim for as long as I could possibly get away with doi
 
 In the true developer fashion, I started with one task to solve Advent of Code puzzles, I ended up talking myself into "Let's spend a day or two to write a tool that saves me ... 5s of copy and paste task". Here we are.
 
-### Other features in the work
+### Other features in the work 
 
-There are a number of features I'd like to add in the coming days/weeks:
+There are a number of features I'd like to add in the coming days/weeks to get to v1.0.0
 
 - `:AocSubmitAnswer` to submit your answer.
 - `:AocGetSampleInput` to write puzzle's sample input to file.
 - `:AocYankSampleInput` to yank a puzzle's sample input to a register.
 
-
 I am always open to any feedbacks and suggestions.
 
 ## Requirements
 
-This plugin is written with Neovim >= 10.1, but I suspect it works with older releases.
-
-It also requires a session token to communicate with [adventofcode.com](https://adventofcode.com).
+This plugin requires a session token to communicate with [adventofcode.com](https://adventofcode.com).
 
 This is how you generate one:
 
-1- Login to [adventofcode.com](https://adventofcode.com).
-2- Open Inspect panel, navigate to Storage tab
-3- Select cookies and copy `session` value
-4- Save to somewhere, e.g. `/var/tmp/aoc.txt`
+1. Login to [adventofcode.com](https://adventofcode.com).
+2. Open Inspect panel, navigate to Storage tab.
+3. Select cookies and copy `session` value.
+4. Save to somewhere, e.g. `/var/tmp/aoc.txt`.
+5. Update plugin config to set `session_filepath` attribute with the filepath above.
 
 ## Installation
 
