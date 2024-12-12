@@ -50,6 +50,12 @@ return {
 },
 ```
 
+Should you want to lazy load this plugin, you could add a condition check in its config:
+
+``` lua
+cond = vim.fn.getcwd() == vim.fn.expand("your AOC directory path"),
+```
+
 ## Default configuration
 
 ``` lua
