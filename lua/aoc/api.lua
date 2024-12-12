@@ -67,7 +67,7 @@ M.save_puzzle_input = function(day, year)
    -- Proceed to send GET request to AOC server for the puzzle input
    local f = io.open(cfg.options.session_filepath, "r")
    if not f then
-      vim.api.nvim_err_writeln "Advent Of Code session token is missing. :help aoc.nvim-session"
+      vim.api.nvim_err_writeln "Advent Of Code session token is missing. See :help aoc.nvim-requirements"
       return
    end
 
