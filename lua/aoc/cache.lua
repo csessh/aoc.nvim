@@ -1,3 +1,5 @@
+local cfg = require "aoc.config"
+
 ---@class PuzzleCache
 local M = {}
 
@@ -35,8 +37,7 @@ end
 ---Write cached content to file
 ---@param day string|osdate
 ---@param year string|osdate
----@return boolean
-M.write = function(day, year, content)
+M.write_to_cache = function(day, year, content)
    -- Create a cache directory if one doesn't exist
    -- Quite a clevery hacky way to check if a directory exists without relying on external packages
    local ok, err = os.rename(cache_path, cache_path)
@@ -49,13 +50,35 @@ M.write = function(day, year, content)
    local f = io.open(filename, "w")
    if not f then
       vim.api.nvim_err_writeln("Unable to write puzzle input to cache at " .. filename)
-      return false
+   else
+      f:write(content)
    end
 
-   f:write(content)
    f:close()
+end
 
-   return true
+---Write puzzle input to user's cwd() or where they specify it otherwise
+---@param day string|osdate
+---@param year string|osdate
+---@param content string
+M.write_to_file = function(day, year, content)
+   local filename = ""
+   if cfg.options.puzzle_input.save_to_current_dir then
+      filename = vim.uv.cwd() .. "/" .. cfg.options.puzzle_input.filename
+   else
+      filename = cfg.options.puzzle_input.alternative_filepath
+   end
+
+   ---@diagnostic disable-next-line: param-type-mismatch
+   local f = io.open(filename, "w")
+   if not f then
+      vim.api.nvim_err_writeln("Unable to write puzzle input to file at " .. filename)
+   else
+      f:write(content)
+      f:close()
+   end
+
+   vim.notify("Successfully downloaded puzzle input for Day " .. day .. " (" .. year .. ")")
 end
 
 return M

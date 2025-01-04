@@ -1,11 +1,19 @@
----@class Notification
+---@class Utility
 local M = {}
+
+---Strip a string of any leading/trailing spaces
+---@param s string
+---@return string
+M.trim = function(s)
+   s, _ = string.gsub(s, "%s+", "")
+   return s
+end
 
 --- Create a simple popup message, positioned in the bottom right corner of the buffer
 --- Automatically close this popup after timeout_ms milliseconds
 ---@param message string
----@param timeout_ms number
-M.show = function(message, timeout_ms)
+---@param timeout_ms integer
+M.popup = function(message, timeout_ms)
    local width = #message
    local height = 1
    local buf = vim.api.nvim_create_buf(false, true)
