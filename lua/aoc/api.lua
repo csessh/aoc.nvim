@@ -6,7 +6,7 @@ local cfg = require "aoc.config"
 ---@class APIWrapper
 local M = {}
 M.session_id = nil
-M.user_agent = "github.com/csessh/aoc.nvim by csessh@hey.com"
+M.user_agent = "<github.com/csessh/aoc.nvim> by csessh@hey.com"
 
 ---@param day string|osdate
 ---@param year string|osdate

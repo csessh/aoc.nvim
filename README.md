@@ -18,11 +18,10 @@ In the true developer fashion, I started with one task to solve Advent of Code p
 
 ## Disclaimer
 
-This plugin follows the automation guidelines on the `r/adventofcode` [community wiki](https://www.reddit.com/r/adventofcode/wiki/faqs/automation). 
+This plugin follows the guidelines on the `r/adventofcode` [community wiki](https://www.reddit.com/r/adventofcode/wiki/faqs/automation).
 
 Specifically:
 
-- Outbound calls are throttled to every 5 minutes.
 - Once inputs are downloaded, they are cached locally.
 - If you suspect your input is corrupted, you can manually clear cache and request new input with `:AocClearCache`
 - The User-Agent header used in HTTP requests is set to me since I maintain this tool.

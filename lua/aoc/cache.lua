@@ -52,9 +52,8 @@ M.write_to_cache = function(day, year, content)
       vim.api.nvim_err_writeln("Unable to write puzzle input to cache at " .. filename)
    else
       f:write(content)
+      f:close()
    end
-
-   f:close()
 end
 
 ---Write puzzle input to user's cwd() or where they specify it otherwise
@@ -62,11 +61,9 @@ end
 ---@param year string|osdate
 ---@param content string
 M.write_to_file = function(day, year, content)
-   local filename = ""
+   local filename = cfg.options.puzzle_input.alternative_filepath
    if cfg.options.puzzle_input.save_to_current_dir then
       filename = vim.uv.cwd() .. "/" .. cfg.options.puzzle_input.filename
-   else
-      filename = cfg.options.puzzle_input.alternative_filepath
    end
 
    ---@diagnostic disable-next-line: param-type-mismatch
