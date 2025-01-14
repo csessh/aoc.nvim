@@ -1,9 +1,10 @@
-*aoc.nvim.txt*        For Neovim >= 0.8.0        Last change: 2024 December 12
+*aoc.nvim.txt*         For Neovim >= 0.8.0        Last change: 2025 January 14
 
 ==============================================================================
 Table of Contents                                 *aoc.nvim-table-of-contents*
 
   - Intro                                                     |aoc.nvim-intro|
+  - Disclaimer                                           |aoc.nvim-disclaimer|
   - Requirements                                       |aoc.nvim-requirements|
   - Installation                                       |aoc.nvim-installation|
   - Default configuration                     |aoc.nvim-default-configuration|
@@ -19,7 +20,7 @@ There are other CLI tools that accomplish the same task, none I could see for
 Neovim. Inspirations include:
 
 - CLI written in Rust <https://github.com/scarvalhojr/aoc-cli>
-- CLI written in Python <https://github.com/emilkloeden/aoc-cli-python>
+- CLI written in Python <https://github.com/wimglenn/advent-of-code-data>
 
 I’d like to stay within Neovim for as long as I could possibly get away with
 doing so. Hence, this plugin.
@@ -29,12 +30,23 @@ puzzles, I ended up talking myself into "Let’s spend a day or two to write a
 tool that saves me … 5s of copy and paste task". Here we are.
 
 
+DISCLAIMER                                               *aoc.nvim-disclaimer*
+
+This plugin follows the guidelines on the `r/adventofcode` community wiki
+<https://www.reddit.com/r/adventofcode/wiki/faqs/automation>.
+
+Specifically:
+
+- Once inputs are downloaded, they are cached locally.
+- If you suspect your input is corrupted, you can manually clear cache and request new input with `:AocClearCache`
+- The User-Agent header used in HTTP requests is set to me since I maintain this tool.
+
+
 OTHER FEATURES IN THE WORK ~
 
 There are a number of features I’d like to add in the coming days/weeks to
 get to v1.0.0
 
-- `:AocSubmitAnswer` to submit your answer.
 - `:AocGetSampleInput` to write puzzle’s sample input to file.
 - `:AocYankSampleInput` to yank a puzzle’s sample input to a register.
 
@@ -69,7 +81,7 @@ Let your favourite package manager (`lazy.nvim`) do the work:
 <
 
 Should you want to lazy load this plugin, you could add a condition check in
-its config:
+its config like so:
 
 >lua
     cond = vim.fn.getcwd() == vim.fn.expand("your AOC directory path"),
@@ -85,7 +97,8 @@ DEFAULT CONFIGURATION                         *aoc.nvim-default-configuration*
        session_filepath = "/var/tmp/aoc.txt", -- Default filepath to your AOC session token
        puzzle_input = { 
           filename = "puzzle.txt",            -- Default puzzle input filename
-          save_to_current_dir = true,         -- Save puzzle input file to your current buffer's cwd() using {filename} attribute above
+          save_to_current_dir = true,         -- Save puzzle input file to your current buffer's cwd() 
+                                              -- using {filename} attribute listed above.
           alternative_filepath = nil,         -- This option is ONLY used when save_to_current_dir is set to false
                                               -- This option allows you to set a generic filepath for your puzzle input
                                               -- For example: ~/aoc/input.txt or ~/aoc/puzzle ...
@@ -103,6 +116,7 @@ This plugin provides the following user commands:
     :AocGetTodayPuzzleInput
     :AocClearCache
     :AocInspectConfig
+    :AocReloadSessionToken
 <
 
 
@@ -161,6 +175,16 @@ This command allows you to quickly inspect the current plugin configuration.
           alternative_filepath = nil,
        },
     }
+<
+
+
+AOCRELOADSESSIONTOKEN ~
+
+This command reloads session token should your session token change.
+
+>vim
+    :AocReloadSessionToken
+    Session token loaded
 <
 
 
