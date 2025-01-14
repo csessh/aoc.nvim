@@ -1,20 +1,23 @@
+local inspect = require "vim.inspect"
 local cache = require "aoc.cache"
 local curl = require "plenary.curl"
 local cfg = require "aoc.config"
 
 ---@class APIWrapper
 local M = {}
+M.session_id = nil
+M.user_agent = "<github.com/csessh/aoc.nvim> by csessh@hey.com"
 
 ---@param day string|osdate
 ---@param year string|osdate
 local validate_args = function(day, year)
    if day == nil or day == "" then
-      vim.api.nvim_err_writeln "Missing day"
+      vim.api.nvim_err_writeln "Day is not valid or is not specified"
       return false
    end
 
    if year == nil or year == "" then
-      vim.api.nvim_err_writeln "Missing year"
+      vim.api.nvim_err_writeln "Year is not valid of is not specified"
       return false
    end
 
@@ -34,6 +37,26 @@ local validate_args = function(day, year)
    return true
 end
 
+---Load session token from file
+---@return string?
+local get_session_id = function()
+   if M.session_id then
+      return M.session_id
+   end
+
+   local f = io.open(cfg.options.session_filepath, "r")
+   if not f then
+      vim.api.nvim_err_writeln("Unable to open session file" .. cfg.options.session_filepath)
+      return nil
+   end
+
+   local sid = f:read "*a"
+   M.session_id = sid
+   f:close()
+
+   return sid
+end
+
 -- Effectively send a curl request like so:
 -- curl -X GET https://adventofcode.com/{year}/day/{day}/input -H "Cookie: session={session_token_path}"
 -- Always check and validate cache before sending out requests. It's best to polite.
@@ -50,61 +73,37 @@ M.save_puzzle_input = function(day, year)
       local content = cf:read "*a"
       cf:close()
 
-      local f = io.open(vim.uv.cwd() .. "/" .. cfg.options.puzzle_input.filename, "w")
-      if not f then
-         vim.api.nvim_err_writeln("Unable to write puzzle input to file at " .. cfg.options.puzzle_input.filename)
-         return
-      end
-
-      f:write(content)
-      f:close()
-
-      vim.notify("Successfully retrieved puzzle input for Day " .. day .. " (" .. year .. ")")
+      cache.write_to_file(day, year, content)
       return
    end
 
    -- Proceed to send GET request to AOC server for the puzzle input
-   local f = io.open(cfg.options.session_filepath, "r")
-   if not f then
+   local sid = get_session_id()
+   if not sid then
       vim.api.nvim_err_writeln "Advent Of Code session token is missing. See :help aoc.nvim-requirements"
       return
    end
-
-   local sid = f:read "*a"
-   f:close()
 
    local response = curl.get {
       url = "https://adventofcode.com/" .. year .. "/day/" .. day .. "/input",
       headers = {
          cookie = "session=" .. sid,
+         user_agent = M.user_agent,
       },
    }
 
    if response.status == 200 then
-      -- Cache the puzzle input for future use
-      cache.write(day, year, response.body)
-
-      -- Write puzzle input to user's cwd() or where they specify it otherwise
-      local filename = ""
-      if cfg.options.puzzle_input.save_to_current_dir then
-         filename = vim.uv.cwd() .. "/" .. cfg.options.puzzle_input.filename
-      else
-         filename = cfg.options.puzzle_input.alternative_filepath
-      end
-
-      ---@diagnostic disable-next-line: param-type-mismatch
-      f = io.open(filename, "w")
-      if not f then
-         vim.api.nvim_err_writeln("Unable to write puzzle input to file at " .. filename)
-         return
-      end
-
-      f:write(response.body)
-      f:close()
-
-      vim.notify("Successfully downloaded puzzle input for Day " .. day .. " (" .. year .. ")")
+      cache.write_to_cache(day, year, response.body)
+      cache.write_to_file(day, year, response.body)
    else
       vim.api.nvim_err_writeln(response.body)
+   end
+end
+
+M.reload_session_token = function()
+   M.session_id = get_session_id()
+   if M.session_id then
+      vim.notify "Session token reloaded"
    end
 end
 
