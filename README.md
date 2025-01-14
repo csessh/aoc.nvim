@@ -92,7 +92,7 @@ This plugin provides the following user commands:
 :AocGetTodayPuzzleInput
 :AocClearCache
 :AocInspectConfig
-:AocReloadSession
+:AocReloadSessionToken
 ```
 
 ### AocGetPuzzleInput
@@ -144,12 +144,12 @@ This command allows you to quickly inspect the current plugin configuration.
 }
 ```
 
-### AocReloadSession
+### AocReloadSessionToken
 
 This command reloads session token should your session token change.
 
 ``` vim
-:AocReloadSession
+:AocReloadSessionToken
 Session token loaded
 ```
 
