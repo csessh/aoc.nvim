@@ -46,6 +46,7 @@ local get_session_id = function()
 
    local f = io.open(cfg.options.session_filepath, "r")
    if not f then
+      vim.api.nvim_err_writeln("Unable to open session file" .. cfg.options.session_filepath)
       return nil
    end
 
@@ -96,6 +97,13 @@ M.save_puzzle_input = function(day, year)
       cache.write_to_file(day, year, response.body)
    else
       vim.api.nvim_err_writeln(response.body)
+   end
+end
+
+M.reload_session_token = function()
+   M.session_id = get_session_id()
+   if M.session_id then
+      vim.notify "Session token reloaded"
    end
 end
 

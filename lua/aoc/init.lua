@@ -29,6 +29,7 @@ M.setup = function(args)
 
    vim.api.nvim_create_user_command("AocClearCache", cache.clear_cache, {})
    vim.api.nvim_create_user_command("AocInspectConfig", cfg.debug, {})
+   vim.api.nvim_create_user_command("AocReloadSession", api.reload_session_token, {})
 end
 
 return M
