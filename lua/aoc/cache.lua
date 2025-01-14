@@ -25,13 +25,7 @@ end
 ---@param year string|osdate
 ---@return file*?
 M.get_cached_input_file = function(day, year)
-   local f = io.open(cache_path .. year .. day .. ".txt")
-
-   if not f then
-      return nil
-   end
-
-   return f
+   return io.open(cache_path .. year .. day .. ".txt")
 end
 
 ---Write cached content to file

@@ -12,12 +12,12 @@ M.user_agent = "<github.com/csessh/aoc.nvim> by csessh@hey.com"
 ---@param year string|osdate
 local validate_args = function(day, year)
    if day == nil or day == "" then
-      vim.api.nvim_err_writeln "Missing day"
+      vim.api.nvim_err_writeln "Day is not valid or is not specified"
       return false
    end
 
    if year == nil or year == "" then
-      vim.api.nvim_err_writeln "Missing year"
+      vim.api.nvim_err_writeln "Year is not valid of is not specified"
       return false
    end
 
