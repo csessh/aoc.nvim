@@ -7,6 +7,7 @@ local cfg = require "aoc.config"
 local M = {}
 M.session_id = nil
 M.user_agent = "<github.com/csessh/aoc.nvim> by csessh@hey.com"
+M.request_timestamps = {}
 
 ---@param day string|osdate
 ---@param year string|osdate
@@ -57,6 +58,22 @@ local get_session_id = function()
    return sid
 end
 
+local rate_limit_reached = function()
+   local now = os.time()
+   for i = #M.request_timestamps, 1, -1 do
+      if now - M.request_timestamps[i] > 60 then
+         table.remove(M.request_timestamps, i)
+      end
+   end
+
+   if #M.request_timestamps >= cfg.options.requests_per_minute then
+      return true
+   end
+
+   table.insert(M.request_timestamps, now)
+   return false
+end
+
 -- Effectively send a curl request like so:
 -- curl -X GET https://adventofcode.com/{year}/day/{day}/input -H "Cookie: session={session_token_path}"
 -- Always check and validate cache before sending out requests. It's best to polite.
@@ -64,6 +81,11 @@ end
 ---@param year string|osdate
 M.save_puzzle_input = function(day, year)
    if not validate_args(day, year) then
+      return
+   end
+
+   if rate_limit_reached() then
+      vim.api.nvim_err_writeln "Too many requests, please wait a moment"
       return
    end
 

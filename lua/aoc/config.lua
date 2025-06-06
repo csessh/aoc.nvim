@@ -7,6 +7,7 @@ local M = {}
 ---@type table
 local default_opts = {
    session_filepath = "/var/tmp/aoc.txt",
+   requests_per_minute = 20,
    puzzle_input = {
       filename = "puzzle.txt",
       save_to_current_dir = true,

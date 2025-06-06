@@ -25,6 +25,7 @@ Specifically:
 - Once inputs are downloaded, they are cached locally.
 - If you suspect your input is corrupted, you can manually clear cache and request new input with `:AocClearCache`
 - The User-Agent header used in HTTP requests is set to me since I maintain this tool.
+- Requests are limited to 20 per minute to avoid flooding `adventofcode.com`.
 
 ### Other features in the work 
 
@@ -73,7 +74,8 @@ cond = vim.fn.getcwd() == vim.fn.expand("your AOC directory path"),
 ---@type table
 local default_opts = {
    session_filepath = "/var/tmp/aoc.txt", -- Default filepath to your AOC session token
-   puzzle_input = { 
+   requests_per_minute = 20,                -- Limit requests to prevent flooding the server
+   puzzle_input = {
       filename = "puzzle.txt",            -- Default puzzle input filename
       save_to_current_dir = true,         -- Save puzzle input file to your current buffer's cwd() 
                                           -- using {filename} attribute listed above.
@@ -136,6 +138,7 @@ This command allows you to quickly inspect the current plugin configuration.
 :AocInspectConfig
 {
    session_filepath = "/var/tmp/aoc.txt",
+   requests_per_minute = 20,
    puzzle_input = {
       filename = "puzzle.txt",
       save_to_current_dir = true,
