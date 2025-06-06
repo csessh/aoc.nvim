@@ -19,7 +19,8 @@ M.init = function(args)
 
    M.options.session_filepath = vim.fn.expand(M.options.session_filepath)
    if M.options.puzzle_input.alternative_filepath then
-      M.options.alternative_filepath = vim.fn.expand(M.options.alternative_filepath)
+      M.options.puzzle_input.alternative_filepath =
+         vim.fn.expand(M.options.puzzle_input.alternative_filepath)
    end
 end
 
