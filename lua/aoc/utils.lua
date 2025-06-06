@@ -5,8 +5,8 @@ local M = {}
 ---@param s string
 ---@return string
 M.trim = function(s)
-   s, _ = string.gsub(s, "%s+", "")
-   return s
+   local result, _ = string.gsub(s, "^%s*(.-)%s*$", "%1")
+   return result
 end
 
 --- Create a simple popup message, positioned in the bottom right corner of the buffer
