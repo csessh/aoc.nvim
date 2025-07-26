@@ -12,7 +12,7 @@ M.clear_cache = function()
    local paths = vim.split(vim.fn.glob(cache_path .. "*.txt"), "\n")
    for _, file in pairs(paths) do
       if file ~= "" and not os.remove(file) then
-         vim.api.nvim_err_writeln("Failed to remove " .. file)
+         vim.notify("Failed to remove " .. file, vim.log.levels.ERROR)
       end
    end
 
@@ -43,7 +43,7 @@ M.write_to_cache = function(day, year, content)
    local filename = cache_path .. year .. day .. ".txt"
    local f = io.open(filename, "w")
    if not f then
-      vim.api.nvim_err_writeln("Unable to write puzzle input to cache at " .. filename)
+      vim.notify("Unable to write puzzle input to cache at " .. filename, vim.log.levels.ERROR)
    else
       f:write(content)
       f:close()
@@ -63,7 +63,7 @@ M.write_to_file = function(day, year, content)
    ---@diagnostic disable-next-line: param-type-mismatch
    local f = io.open(filename, "w")
    if not f then
-      vim.api.nvim_err_writeln("Unable to write puzzle input to file at " .. filename)
+      vim.notify("Unable to write puzzle input to file at " .. filename, vim.log.levels.ERROR)
    else
       f:write(content)
       f:close()

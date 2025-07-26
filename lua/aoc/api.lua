@@ -1,4 +1,3 @@
-local inspect = require "vim.inspect"
 local cache = require "aoc.cache"
 local curl = require "plenary.curl"
 local cfg = require "aoc.config"
@@ -8,16 +7,21 @@ local M = {}
 M.session_id = nil
 M.user_agent = "<github.com/csessh/aoc.nvim> by csessh@hey.com"
 
+-- Rate limiting: 5 requests per minute
+M.request_timestamps = {}
+M.max_requests_per_minute = 5
+M.rate_limit_window_ms = 60000
+
 ---@param day string|osdate
 ---@param year string|osdate
 local validate_args = function(day, year)
    if day == nil or day == "" then
-      vim.api.nvim_err_writeln "Day is not valid or is not specified"
+      vim.notify("Day is not valid or is not specified", vim.log.levels.ERROR)
       return false
    end
 
    if year == nil or year == "" then
-      vim.api.nvim_err_writeln "Year is not valid of is not specified"
+      vim.notify("Year is not valid of is not specified", vim.log.levels.ERROR)
       return false
    end
 
@@ -25,12 +29,12 @@ local validate_args = function(day, year)
    local y = tonumber(year)
 
    if not d or d < 1 or d > 31 then
-      vim.api.nvim_err_writeln("Invalid day: " .. day)
+      vim.notify("Invalid day: " .. day, vim.log.levels.ERROR)
       return false
    end
 
    if not y and y < 2015 or y > tonumber(os.date "%Y") then
-      vim.api.nvim_err_writeln("Invalid year: " .. year)
+      vim.notify("Invalid year: " .. year, vim.log.levels.ERROR)
       return false
    end
 
@@ -46,7 +50,7 @@ local get_session_id = function()
 
    local f = io.open(cfg.options.session_filepath, "r")
    if not f then
-      vim.api.nvim_err_writeln("Unable to open session file" .. cfg.options.session_filepath)
+      vim.notify("Unable to open session file" .. cfg.options.session_filepath, vim.log.levels.ERROR)
       return nil
    end
 
@@ -55,6 +59,29 @@ local get_session_id = function()
    f:close()
 
    return sid
+end
+
+---Check if we can make a request without exceeding rate limit
+---@return boolean
+local can_make_request = function()
+   local current_time = vim.uv.now()
+   local cutoff_time = current_time - M.rate_limit_window_ms
+
+   -- Remove timestamps older than 1 minute
+   local recent_timestamps = {}
+   for _, timestamp in ipairs(M.request_timestamps) do
+      if timestamp > cutoff_time then
+         table.insert(recent_timestamps, timestamp)
+      end
+   end
+   M.request_timestamps = recent_timestamps
+
+   return #M.request_timestamps < M.max_requests_per_minute
+end
+
+---Record a new request timestamp
+local record_request = function()
+   table.insert(M.request_timestamps, vim.uv.now())
 end
 
 -- Effectively send a curl request like so:
@@ -77,12 +104,26 @@ M.save_puzzle_input = function(day, year)
       return
    end
 
+   -- Check rate limit before making request
+   if not can_make_request() then
+      vim.notify(
+         "Rate limit exceeded. Please wait before making another request (max "
+            .. M.max_requests_per_minute
+            .. " requests per minute)",
+         vim.log.levels.ERROR
+      )
+      return
+   end
+
    -- Proceed to send GET request to AOC server for the puzzle input
    local sid = get_session_id()
    if not sid then
-      vim.api.nvim_err_writeln "Advent Of Code session token is missing. See :help aoc.nvim-requirements"
+      vim.notify("Advent Of Code session token is missing. See :help aoc.nvim-requirements", vim.log.levels.ERROR)
       return
    end
+
+   -- Record the request timestamp
+   record_request()
 
    local response = curl.get {
       url = "https://adventofcode.com/" .. year .. "/day/" .. day .. "/input",
@@ -96,7 +137,7 @@ M.save_puzzle_input = function(day, year)
       cache.write_to_cache(day, year, response.body)
       cache.write_to_file(day, year, response.body)
    else
-      vim.api.nvim_err_writeln(response.body)
+      vim.notify(response.body, vim.log.levels.ERROR)
    end
 end
 
