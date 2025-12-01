@@ -21,7 +21,7 @@ M.setup = function(args)
    end, {})
 
    vim.api.nvim_create_user_command("AocGetTodayPuzzleInput", function()
-      local day = os.date "%d"
+      local day = tostring(tonumber(os.date "%d"))
       local year = os.date "%Y"
 
       api.save_puzzle_input(day, year)
